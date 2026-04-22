@@ -1,13 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/login.css'; 
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Aquí irá tu lógica de autenticación más adelante
-    console.log("Intentando iniciar sesión...");
-  };
+  e.preventDefault();
+
+  // Aqui ira la validacion
+  console.log("Intentando iniciar sesión...");
+  navigate('/dashboard');
+};
+
+  
+
+  
 
   return (
     <div id="fondo">
@@ -20,7 +30,7 @@ function Login() {
               <input type="email" className="form-control" id="email" placeholder="Ingresa tu correo electrónico" required />
             </div>
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">Contraseña</label>
+              <label htmlFor="password" className="form-label"> Contraseña</label>
               <input type="password" className="form-control" id="password" placeholder="Ingresa tu contraseña" required />
             </div>
             <button type="submit" className="btn" id="btn-iniciar-sesion">Iniciar Sesión</button>
@@ -33,5 +43,7 @@ function Login() {
     </div>
   );
 }
+
+
 
 export default Login;
