@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import "../styles/Dashboard.css";
+import "../styles/dashboard.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DATOS DE EJEMPLO (mock data)
