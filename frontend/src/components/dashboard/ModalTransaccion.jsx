@@ -153,6 +153,42 @@ export default function ModalTransaccion({ onClose, onSuccess }) {
             />
           </div>
 
+
+          {/* Recurrente */}
+        <div className="modal-field">
+         <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+         <input
+          type="checkbox"
+          name="is_recurring"
+          checked={form.is_recurring}
+          onChange={handleChange}
+          style={{ width: 16, height: 16, accentColor: '#5b6ef5' }}
+          />
+          🔁 Repetir automáticamente
+          </label>
+        </div>
+
+        {form.is_recurring && (
+        <div className="modal-field">
+          <label htmlFor="frequency">Frecuencia *</label>
+          <select
+            id="frequency"
+            name="frequency"
+           value={form.frequency}
+            onChange={handleChange}
+            required
+          >
+         <option value="">Selecciona una frecuencia</option>
+          <option value="monthly">Mensual</option>
+         <option value="weekly">Semanal</option>
+          <option value="biweekly">Quincenal</option>
+         <option value="annual">Anual</option>
+         </select>
+        </div>
+       )}
+
+
+
           <button type="submit" className="modal-submit" disabled={loading}>
             {loading ? 'Guardando...' : 'Guardar transacción'}
           </button>

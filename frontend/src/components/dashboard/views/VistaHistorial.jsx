@@ -16,12 +16,35 @@ function FilaTransaccion({ transaccion, onVerDetalle, onEliminar }) {
         style={{ background: esGasto ? "rgba(248,113,113,0.1)" : "rgba(52,211,153,0.1)" }}>
         {esGasto ? "💸" : "💰"}
       </div>
+
+
       <div className="hist-info">
         <span className="hist-categoria">{transaccion.category_name}</span>
         {transaccion.description && (
           <span className="hist-descripcion">{transaccion.description}</span>
         )}
       </div>
+
+
+      <div className="hist-info">
+        <span className="hist-categoria">
+          {transaccion.category_name}
+          {transaccion.is_recurring && (
+       <span
+        title="Recurrente"
+        style={{ marginLeft: 6, fontSize: '0.75rem', color: '#5b6ef5' }}
+       >
+          🔁
+       </span>
+        )}
+        </span>
+        {transaccion.description && (
+        <span className="hist-descripcion">{transaccion.description}</span>
+        )}
+      </div>
+
+
+
       <div className="hist-fecha">
         {new Date(transaccion.trans_date).toLocaleDateString("es-CO")}
       </div>
