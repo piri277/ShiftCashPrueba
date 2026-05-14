@@ -77,7 +77,7 @@
 
 .hist-search {
   width: 100%;
-  background: #21253a;
+  background: #111422;
   border: 1.5px solid rgba(91,110,245,0.2);
   border-radius: 10px;
   color: #f0f2ff;
@@ -109,8 +109,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #21253a;
-  border: 1.5px solid rgba(91,110,245,0.2);
+  background: #111422;
+  border: 1.5px solid rgba(38, 45, 98, 0.2);
   border-radius: 10px;
   color: #9ba3c7;
   padding: 9px 14px;
@@ -136,7 +136,7 @@
 
 /* ===== PANEL DE FILTROS ===== */
 .hist-panel {
-  background: #1a1d2e;
+  background: #111422;
   border: 1.5px solid rgba(91,110,245,0.2);
   border-radius: 14px;
   padding: 20px;
