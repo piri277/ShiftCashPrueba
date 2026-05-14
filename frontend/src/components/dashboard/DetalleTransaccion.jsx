@@ -3,10 +3,11 @@ import { useState }            from "react";
 import { useCategorias }       from "../../hooks/useCategorias";
 import { useTransaccionForm }  from "../../hooks/useTransaccionForm";
 import { formatearPesos }      from "../../utils/formatters";
+import { createPortal } from "react-dom"; 
 
 import "../../styles/modal.css";
 
-export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) {
+export default function DetalleTransaccion({ transaccion, onClose, onSuccess}) {
   const [editando, setEditando] = useState(false);
   const { categorias, loadingCats } = useCategorias();
   const { form, error, loading, handleChange, handleSubmit } = useTransaccionForm(
@@ -17,8 +18,8 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) 
   const esGasto = transaccion.type === "expense";
 
   console.log(transaccion);
-  return (
-    <div className="modal-overlay" onClick={onClose}>
+  return createPortal(
+    <div className="modal-overlay-scroll" onClick={onClose} style={{ top: scrollY }}>
       <div className="modal-card" onClick={e => e.stopPropagation()}>
 
         {/* Header */}
@@ -54,6 +55,27 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) 
                 <span className="detalle-label">Descripción</span>
                 <span className="detalle-valor">{transaccion.description || "Sin descripción"}</span>
               </div>
+
+              <div className="detalle-campo">
+                <span className="detalle-label">Recurrente</span>
+                <span className="detalle-valor">
+                  {transaccion.is_recurring ? "🔁 Sí" : "No"}
+                </span>
+              </div>
+
+              {transaccion.is_recurring && (
+                <div className="detalle-campo">
+                  <span className="detalle-label">Frecuencia</span>
+                  <span className="detalle-valor">
+                    {{
+                      monthly: "📅 Mensual",
+                      weekly: "📅 Semanal",
+                      biweekly: "📅 Quincenal",
+                      annual: "📅 Anual",
+                    }[transaccion.frequency] ?? transaccion.frequency}
+                  </span>
+                </div>
+              )}
             </div>
             <button className="modal-submit" onClick={() => setEditando(true)}>
               ✏️ Editar
@@ -117,17 +139,17 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) 
             </div>
 
             {/* Recurrente */}
-            <div className="modal-field">
-             <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-               <input
-                  type="checkbox"
-                 name="is_recurring"
-                 checked={form.is_recurring}
-                  onChange={handleChange}
-                  style={{ width: 16, height: 16, accentColor: '#5b6ef5' }}
-               />
-               🔁 Repetir automáticamente
-              </label>
+            <div
+              className={`modal-recurrente-toggle ${form.is_recurring ? 'activo' : ''}`}
+              onClick={() =>
+                handleChange({ target: { name: 'is_recurring', type: 'checkbox', checked: !form.is_recurring } })
+              }
+            >
+              <div className="modal-recurrente-label">
+                <span>🔁</span>
+                Repetir automáticamente
+              </div>
+              <div className="modal-switch" />
             </div>
 
             {form.is_recurring && (
@@ -162,6 +184,7 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) 
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

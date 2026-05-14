@@ -250,3 +250,17 @@
   transform: translateX(16px);
   background: #7c8df7;
 }
+
+.modal-overlay-scroll {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background: rgba(10, 12, 20, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
