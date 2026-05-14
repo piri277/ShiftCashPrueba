@@ -116,3 +116,11 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+html, body {
+  height: 100%;
+}
+
+#root {
+  min-height: 100%;
+}

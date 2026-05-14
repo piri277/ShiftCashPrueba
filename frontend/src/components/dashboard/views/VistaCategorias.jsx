@@ -2,6 +2,7 @@
 import { useState }             from 'react';
 import { eliminarCategoria }    from '../../../api/categories';
 import { useCategoriasCRUD }    from '../../../hooks/useCategoriasCRUD';
+import { createPortal } from 'react-dom';
 import VistaCategoriasForm      from './VistaCategoriasForm';
 
 import "../../../styles/categorias.css";
@@ -22,34 +23,78 @@ function TarjetaDefault({ categoria }) {
 function TarjetaPersonalizada({ categoria, onEditar, onEliminar }) {
   const [abierta, setAbierta] = useState(false);
 
-  return (
-    <div className={`cat-card cat-card--custom ${abierta ? 'abierta' : ''}`}
-      onClick={() => setAbierta(p => !p)}>
-      <div className="cat-card-icon">{categoria.icon}</div>
-      <div className="cat-card-name">{categoria.name_cat}</div>
-      <div className="cat-card-type">
-        {categoria.type === 'expense' ? 'Gasto' : categoria.type === 'income' ? 'Ingreso' : 'Ambos'}
-      </div>
-      {abierta && (
-        <div className="cat-card-actions" onClick={e => e.stopPropagation()}>
-          <button className="cat-action-btn cat-action-btn--edit"
-            onClick={() => { setAbierta(false); onEditar(categoria); }}>
+  // Extraemos el emoji del nombre si es que viene pegado, 
+  // o usamos el campo icon si ya lo tienes separado en la DB.
+  const nombreLimpio = categoria.name_cat.replace(/[\u{1F300}-\u{1F9FF}]/gu, '').trim();
+  const iconoGrande = categoria.icon || (categoria.name_cat.match(/[\u{1F300}-\u{1F9FF}]/gu) || [])[0] || '📁';
+
+  const modalDetalle = (
+    <div className="modal-overlay" onClick={() => setAbierta(false)}>
+      <div className="modal-card" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Detalle de Categoría</h3>
+          <button className="modal-close" onClick={() => setAbierta(false)}>✕</button>
+        </div>
+
+        <div className="detalle-body" style={{ textAlign: 'center', padding: '10px 0' }}>
+          <div style={{ fontSize: '3.5rem', marginBottom: '15px' }}>{iconoGrande}</div>
+          <h2 style={{ fontSize: '1.5rem', color: '#f0f2ff', marginBottom: '10px' }}>
+            {nombreLimpio}
+          </h2>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <span className={`toggle-btn ${
+              categoria.type === 'expense' ? 'active-expense' : 
+              categoria.type === 'income' ? 'active-income' : 'active-both'
+            }`} style={{ cursor: 'default', pointerEvents: 'none' }}>
+              {categoria.type === 'expense' ? '💸 Gasto' : 
+               categoria.type === 'income' ? '💰 Ingreso' : '🔁 Ambos'}
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '12px', marginTop: '30px' }}>
+          <button
+            className="modal-submit"
+            style={{ background: 'rgba(91,110,245,0.15)', color: '#7c8df7', boxShadow: 'none', marginTop: 0 }}
+            onClick={() => { setAbierta(false); onEditar(categoria); }}
+          >
             ✏️ Editar
           </button>
-          <button className="cat-action-btn cat-action-btn--delete"
-            onClick={() => { setAbierta(false); onEliminar(categoria); }}>
+          <button
+            className="modal-submit"
+            style={{ background: 'rgba(248,113,113,0.15)', color: '#f87171', boxShadow: 'none', marginTop: 0 }}
+            onClick={() => { setAbierta(false); onEliminar(categoria); }}
+          >
             🗑️ Eliminar
           </button>
         </div>
-      )}
+      </div>
     </div>
+  );
+
+  return (
+    <>
+      <div
+        className="cat-card cat-card--default" // Usamos la misma clase que la default para el diseño
+        style={{ cursor: 'pointer', border: abierta ? '1px solid #5b6ef5' : '1px solid transparent' }}
+        onClick={() => setAbierta(true)}
+      >
+        {/* Aquí está el truco: el icono va en su propio div arriba */}
+        <div className="cat-card-icon">{iconoGrande}</div>
+        <div className="cat-card-name">{nombreLimpio}</div>
+        <div className="cat-card-type">
+          {categoria.type === 'expense' ? 'Gasto' : categoria.type === 'income' ? 'Ingreso' : 'Ambos'}
+        </div>
+      </div>
+      {abierta && createPortal(modalDetalle, document.body)}
+    </>
   );
 }
 
 // ── Modal confirmación eliminar ──
 function ConfirmarEliminarCategoria({ categoria, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState('');
+  const [error, setError] = useState('');
 
   const handleEliminar = async () => {
     setLoading(true);
@@ -64,7 +109,7 @@ function ConfirmarEliminarCategoria({ categoria, onClose, onSuccess }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" style={{ maxWidth: 380 }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
@@ -87,7 +132,8 @@ function ConfirmarEliminarCategoria({ categoria, onClose, onSuccess }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

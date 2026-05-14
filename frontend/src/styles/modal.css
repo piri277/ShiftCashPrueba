@@ -3,12 +3,15 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  min-height: 100dvh;
+  background: rgba(10, 12, 20, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
 }
 
 .modal-card {
@@ -20,8 +23,11 @@
   max-width: 440px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-  animation: slideUp 0.2s ease;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.3),
+    0 20px 48px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -132,3 +138,19 @@
 .detalle-campo { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(91,110,245,0.08); }
 .detalle-label { font-size: 0.82rem; color: #9ba3c7; font-weight: 500; }
 .detalle-valor { font-size: 0.9rem; color: #f0f2ff; font-weight: 500; text-align: right; max-width: 60%; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95) translateY(10px); 
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0); 
+  }
+}
