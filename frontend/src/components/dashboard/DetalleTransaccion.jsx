@@ -16,6 +16,7 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) 
 
   const esGasto = transaccion.type === "expense";
 
+  console.log(transaccion);
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={e => e.stopPropagation()}>
@@ -114,6 +115,38 @@ export default function DetalleTransaccion({ transaccion, onClose, onSuccess }) 
               <input name="trans_date" type="date"
                 value={form.trans_date} onChange={handleChange} />
             </div>
+
+            {/* Recurrente */}
+            <div className="modal-field">
+             <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+               <input
+                  type="checkbox"
+                 name="is_recurring"
+                 checked={form.is_recurring}
+                  onChange={handleChange}
+                  style={{ width: 16, height: 16, accentColor: '#5b6ef5' }}
+               />
+               🔁 Repetir automáticamente
+              </label>
+            </div>
+
+            {form.is_recurring && (
+             <div className="modal-field">
+                <label>Frecuencia *</label>
+                <select
+                  name="frequency"
+                 value={form.frequency}
+                  onChange={handleChange}
+                  required
+               >
+                  <option value="">Selecciona una frecuencia</option>
+                  <option value="monthly">Mensual</option>
+                  <option value="weekly">Semanal</option>
+                  <option value="biweekly">Quincenal</option>
+                 <option value="annual">Anual</option>
+               </select>
+              </div>
+            )}
 
             <div style={{ display: "flex", gap: 10 }}>
               <button type="button" className="modal-submit"

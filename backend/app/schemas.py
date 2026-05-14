@@ -56,6 +56,9 @@ class TransactionCreate(BaseModel):
     description: Optional[str] = None
     trans_date: Optional[date] = None
 
+    is_recurring: bool = False
+    frequency: Optional[str] = None
+
     @field_validator("amount")
     @classmethod
     def amount_must_be_positive(cls, v):
@@ -78,6 +81,9 @@ class TransactionOut(BaseModel):
     amount: float
     description: Optional[str]
     trans_date: date
+
+    is_recurring: bool = False
+    frequency: Optional[str] = None
 
     class Config:
         from_attributes = True
