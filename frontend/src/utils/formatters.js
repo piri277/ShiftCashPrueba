@@ -23,3 +23,18 @@ export function formatearPesos(numero) {
 export function formatearMillones(valor) {
   return `$${(valor / 1_000_000).toFixed(1)}M`;
 }
+
+
+export function crearFormateadorY(datos) {
+  const maximo = Math.max(...datos.map(d =>
+    Math.max(d.ingresos ?? 0, d.gastos ?? 0, Math.abs(d.ahorros ?? 0))
+  ));
+
+  return (valor) => {
+    if (maximo >= 1_000_000) return `$${(valor / 1_000_000).toFixed(1)}M`;
+    if (maximo >= 100_000)   return `$${(valor / 1_000).toFixed(0)}K`;
+    if (maximo >= 10_000)    return `$${(valor / 1_000).toFixed(1)}K`;
+    if (maximo >= 1_000)     return `$${(valor / 1_000).toFixed(1)}K`;
+    return valor === 0 ? "$0" : formatearPesos(valor);
+  };
+}
